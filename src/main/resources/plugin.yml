@@ -1,0 +1,6 @@
+name: RealtimeRenderSCPCommit
+main: net.nabaal.majiir.realtimerenderscpcommit.RealtimeRenderSCPCommit
+version: 0.0.1
+author: Majiir
+description: Copies rendered map tiles to a remote server using SCP.
+depend: [RealtimeRender]
