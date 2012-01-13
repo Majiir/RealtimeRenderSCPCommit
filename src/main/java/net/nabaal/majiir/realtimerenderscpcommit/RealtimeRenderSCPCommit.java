@@ -5,12 +5,14 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 import org.bukkit.configuration.Configuration;
+import org.bukkit.plugin.java.JavaPlugin;
 
-import net.nabaal.majiir.realtimerender.commit.RealtimeRenderCommitPlugin;
+import net.nabaal.majiir.realtimerender.RealtimeRender;
+import net.nabaal.majiir.realtimerender.commit.CommitProvider;
 import net.schmizz.sshj.SSHClient;
 import net.schmizz.sshj.xfer.FileSystemFile;
 
-public class RealtimeRenderSCPCommit extends RealtimeRenderCommitPlugin {
+public class RealtimeRenderSCPCommit extends JavaPlugin implements CommitProvider {
 
 	private static final Logger log = Logger.getLogger("Minecraft");
 	
@@ -22,13 +24,12 @@ public class RealtimeRenderSCPCommit extends RealtimeRenderCommitPlugin {
 	
 	@Override
 	public void onDisable() {
-		super.onDisable();
 		log.info("RealtimeRenderSCPCommit disabled.");
 	}
 	
 	@Override
 	public void onEnable() {
-		super.onEnable();
+		((RealtimeRender)this.getServer().getPluginManager().getPlugin("RealtimeRender")).registerCommitPlugin(this);
 		
 		if (this.getDataFolder().mkdir()) {
 			log.info(String.format("%s: created plugin data directory.", this.getDescription().getName()));
