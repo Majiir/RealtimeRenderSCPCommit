@@ -28,9 +28,7 @@ public class RealtimeRenderSCPCommit extends JavaPlugin implements CommitProvide
 	}
 	
 	@Override
-	public void onEnable() {
-		((RealtimeRender)this.getServer().getPluginManager().getPlugin("RealtimeRender")).registerCommitPlugin(this);
-		
+	public void onEnable() {		
 		if (this.getDataFolder().mkdir()) {
 			log.info(String.format("%s: created plugin data directory.", this.getDescription().getName()));
 		}
@@ -46,6 +44,8 @@ public class RealtimeRenderSCPCommit extends JavaPlugin implements CommitProvide
 		keyFile = new File(this.getDataFolder(), config.getString("keyFile"));
 		passphrase = config.getString("passphrase");
 		remotePath = config.getString("remotePath");
+		
+		((RealtimeRender)this.getServer().getPluginManager().getPlugin("RealtimeRender")).registerCommitPlugin(this);
 		
 		log.info("RealtimeRenderSCPCommit enabled.");
 	}
