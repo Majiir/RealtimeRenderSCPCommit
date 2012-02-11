@@ -11,6 +11,7 @@ import net.nabaal.majiir.realtimerender.RealtimeRender;
 import net.nabaal.majiir.realtimerender.commit.CommitProvider;
 import net.schmizz.sshj.SSHClient;
 import net.schmizz.sshj.xfer.FileSystemFile;
+import net.schmizz.sshj.xfer.scp.SCPFileTransfer;
 
 public class RealtimeRenderSCPCommit extends JavaPlugin implements CommitProvider {
 
@@ -59,8 +60,9 @@ public class RealtimeRenderSCPCommit extends JavaPlugin implements CommitProvide
 				ssh.connect(hostname);
 				ssh.authPublickey(username, ssh.loadKeys(keyFile.getAbsolutePath(), passphrase));
 				ssh.useCompression();
+				SCPFileTransfer transfer = ssh.newSCPFileTransfer();
 				for (File file : files) {
-					ssh.newSCPFileTransfer().upload(new FileSystemFile(file), remotePath);
+					transfer.upload(new FileSystemFile(file), remotePath);
 				}
 			} finally {
 				ssh.disconnect();
