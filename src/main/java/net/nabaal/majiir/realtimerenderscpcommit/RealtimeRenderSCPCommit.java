@@ -52,7 +52,7 @@ public class RealtimeRenderSCPCommit extends JavaPlugin implements CommitProvide
 	}
 	
 	@Override
-	public void commitFiles(Iterable<File> files) {
+	public void commitFiles(Iterable<File> files, String dir) {
 		SSHClient ssh = new SSHClient();
 		try {
 			try {
@@ -62,7 +62,7 @@ public class RealtimeRenderSCPCommit extends JavaPlugin implements CommitProvide
 				ssh.useCompression();
 				SCPFileTransfer transfer = ssh.newSCPFileTransfer();
 				for (File file : files) {
-					transfer.upload(new FileSystemFile(file), remotePath);
+					transfer.upload(new FileSystemFile(file), remotePath + File.pathSeparator + dir);
 				}
 			} finally {
 				ssh.disconnect();
