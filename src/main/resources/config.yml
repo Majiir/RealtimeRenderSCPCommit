@@ -2,4 +2,4 @@ hostname: example.com
 username: example
 keyFile: example.pem
 passphrase: foobar
-remotePath: httpdocs/map/
+remotePath: httpdocs/map/tiles/
