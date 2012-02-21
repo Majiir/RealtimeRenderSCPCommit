@@ -10,6 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import net.nabaal.majiir.realtimerender.RealtimeRender;
 import net.nabaal.majiir.realtimerender.commit.CommitProvider;
 import net.schmizz.sshj.SSHClient;
+import net.schmizz.sshj.sftp.SFTPClient;
 import net.schmizz.sshj.xfer.FileSystemFile;
 import net.schmizz.sshj.xfer.scp.SCPFileTransfer;
 
@@ -67,8 +68,10 @@ public class RealtimeRenderSCPCommit extends JavaPlugin implements CommitProvide
 				ssh.authPublickey(username, ssh.loadKeys(keyFile.getAbsolutePath(), passphrase));
 				ssh.useCompression();
 				SCPFileTransfer transfer = ssh.newSCPFileTransfer();
+				SFTPClient client = ssh.newSFTPClient();
 				for (File file : files) {
 					String path = plugin.getDataFolder().toURI().relativize(file.toURI()).getPath();
+					client.mkdirs(remotePath + path);
 					transfer.upload(new FileSystemFile(file), remotePath + path);
 				}
 			} finally {
