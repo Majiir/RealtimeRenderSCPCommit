@@ -46,6 +46,10 @@ public class RealtimeRenderSCPCommit extends JavaPlugin implements CommitProvide
 		passphrase = config.getString("passphrase");
 		remotePath = config.getString("remotePath");
 		
+		if (!remotePath.endsWith(File.separator)) {
+			remotePath += File.separator;
+		}
+		
 		RealtimeRender plugin = ((RealtimeRender)this.getServer().getPluginManager().getPlugin("RealtimeRender")); 
 		plugin.registerCommitPlugin(this);
 		
@@ -64,7 +68,7 @@ public class RealtimeRenderSCPCommit extends JavaPlugin implements CommitProvide
 				SCPFileTransfer transfer = ssh.newSCPFileTransfer();
 				for (File file : files) {
 					String path = getDataFolder().toURI().relativize(file.toURI()).getPath();
-					transfer.upload(new FileSystemFile(file), remotePath + File.separator + path);
+					transfer.upload(new FileSystemFile(file), remotePath + path);
 				}
 			} finally {
 				ssh.disconnect();
