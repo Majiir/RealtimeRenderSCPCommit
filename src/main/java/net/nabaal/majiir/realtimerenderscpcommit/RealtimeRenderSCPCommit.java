@@ -70,9 +70,9 @@ public class RealtimeRenderSCPCommit extends JavaPlugin implements CommitProvide
 				SCPFileTransfer transfer = ssh.newSCPFileTransfer();
 				SFTPClient client = ssh.newSFTPClient();
 				for (File file : files) {
-					String path = plugin.getDataFolder().toURI().relativize(file.getParentFile().toURI()).getPath();
-					client.mkdirs(remotePath + path);
-					transfer.upload(new FileSystemFile(file), remotePath + path);
+					String path = remotePath + plugin.getDataFolder().toURI().relativize(file.getParentFile().toURI()).getPath();
+					client.mkdirs(path);
+					transfer.upload(new FileSystemFile(file), path);
 				}
 			} finally {
 				ssh.disconnect();
