@@ -1,5 +1,6 @@
 hostname: example.com
 username: example
-keyFile: example.pem
+keyFile: 
 passphrase: foobar
-remotePath: httpdocs/map/tiles/
+remotePath: httpdocs/map/
+useBouncyCastle: false

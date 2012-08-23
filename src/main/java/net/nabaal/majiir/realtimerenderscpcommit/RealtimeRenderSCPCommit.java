@@ -10,6 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import net.nabaal.majiir.realtimerender.RealtimeRender;
 import net.nabaal.majiir.realtimerender.commit.CommitProvider;
 import net.schmizz.sshj.SSHClient;
+import net.schmizz.sshj.common.SecurityUtils;
 import net.schmizz.sshj.sftp.SFTPClient;
 import net.schmizz.sshj.xfer.FileSystemFile;
 import net.schmizz.sshj.xfer.scp.SCPFileTransfer;
@@ -20,6 +21,8 @@ public class RealtimeRenderSCPCommit extends JavaPlugin implements CommitProvide
 	
 	private String hostname;
 	private String username;
+	private boolean useBouncyCastle;
+	private boolean useKeyFile;
 	private File keyFile;
 	private String passphrase;
 	private String remotePath;
@@ -44,13 +47,20 @@ public class RealtimeRenderSCPCommit extends JavaPlugin implements CommitProvide
 		
 		hostname = config.getString("hostname");
 		username = config.getString("username");
-		keyFile = new File(this.getDataFolder(), config.getString("keyFile"));
+		useBouncyCastle = config.getBoolean("useBouncyCastle");
+		String keyFileString = config.getString("keyFile");
+		useKeyFile = !keyFileString.isEmpty();
+		if (useKeyFile) {
+			keyFile = new File(this.getDataFolder(), keyFileString);
+		}
 		passphrase = config.getString("passphrase");
 		remotePath = config.getString("remotePath");
 		
 		if (!remotePath.endsWith(File.separator)) {
 			remotePath += File.separator;
 		}
+		
+		SecurityUtils.setRegisterBouncyCastle(Boolean.valueOf(useBouncyCastle));
 		
 		plugin = ((RealtimeRender)this.getServer().getPluginManager().getPlugin("RealtimeRender")); 
 		plugin.registerCommitPlugin(this);
@@ -65,7 +75,11 @@ public class RealtimeRenderSCPCommit extends JavaPlugin implements CommitProvide
 			try {
 				ssh.loadKnownHosts();
 				ssh.connect(hostname);
-				ssh.authPublickey(username, ssh.loadKeys(keyFile.getAbsolutePath(), passphrase));
+				if (useKeyFile) {
+					ssh.authPublickey(username, ssh.loadKeys(keyFile.getAbsolutePath(), passphrase));
+				} else {
+					ssh.authPassword(username, passphrase);
+				}
 				ssh.useCompression();
 				SCPFileTransfer transfer = ssh.newSCPFileTransfer();
 				SFTPClient client = ssh.newSFTPClient();
