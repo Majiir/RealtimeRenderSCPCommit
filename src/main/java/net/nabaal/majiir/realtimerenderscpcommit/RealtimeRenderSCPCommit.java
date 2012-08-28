@@ -49,7 +49,7 @@ public class RealtimeRenderSCPCommit extends JavaPlugin implements CommitProvide
 		username = config.getString("username");
 		useBouncyCastle = config.getBoolean("useBouncyCastle");
 		String keyFileString = config.getString("keyFile");
-		useKeyFile = !keyFileString.isEmpty();
+		useKeyFile = keyFileString != null;
 		if (useKeyFile) {
 			keyFile = new File(this.getDataFolder(), keyFileString);
 		}
