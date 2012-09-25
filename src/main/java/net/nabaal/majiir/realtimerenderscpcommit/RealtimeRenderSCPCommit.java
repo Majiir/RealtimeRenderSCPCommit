@@ -1,7 +1,6 @@
 package net.nabaal.majiir.realtimerenderscpcommit;
 
 import java.io.File;
-import java.util.logging.Logger;
 
 import org.bukkit.configuration.Configuration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -11,17 +10,15 @@ import net.schmizz.sshj.common.SecurityUtils;
 
 public class RealtimeRenderSCPCommit extends JavaPlugin {
 
-	private static final Logger log = Logger.getLogger("Minecraft");
-	
 	@Override
 	public void onDisable() {
-		log.info("RealtimeRenderSCPCommit disabled.");
+		this.getLogger().info("Commit provider may remain active even though the registering plugin is disabled.");
 	}
 	
 	@Override
 	public void onEnable() {		
 		if (this.getDataFolder().mkdir()) {
-			log.info(String.format("%s: created plugin data directory.", this.getDescription().getName()));
+			this.getLogger().info(String.format("%s: created plugin data directory.", this.getDescription().getName()));
 		}
 		
 		if (!new File(this.getDataFolder(), "config.yml").exists()) {
@@ -46,8 +43,6 @@ public class RealtimeRenderSCPCommit extends JavaPlugin {
 		
 		RealtimeRender plugin = ((RealtimeRender)this.getServer().getPluginManager().getPlugin("RealtimeRender")); 
 		plugin.registerCommitPlugin(new SCPCommitProvider(hostname, remotePath, username, passphrase, keyFile, plugin.getDataFolder()));
-		
-		log.info("RealtimeRenderSCPCommit enabled.");
 	}
 	
 }
